@@ -21,20 +21,7 @@
             "./node_modules/@types",
             "./src/@types"
         ],
-        "paths": {
-            "@src/*": [
-                "src/*"
-            ],
-            "@images/*": [
-                "src/images/*"
-            ],
-            "@styles/*": [
-                "src/styles/*"
-            ],
-            "@components/*": [
-                "src/components/*"
-            ]
-        },
+        "paths": {},
         "allowSyntheticDefaultImports": true,
         "esModuleInterop": true,
         "importsNotUsedAsValues": "preserve",
