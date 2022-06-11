@@ -1,10 +1,13 @@
 import React from 'react';
+import {useHistory} from 'react-router-dom';
 import {Checkbox} from '../../components/checkbox';
 import {Input} from '../../components/input';
 import {Bold, Button} from '../../components/styles';
 import {LoginFormStyled} from './styled';
 
 export const LoginForm = () => {
+  const {push} = useHistory();
+
   return (
     <LoginFormStyled>
       <div className="title">Sistema de registro de temperatura</div>
@@ -23,7 +26,7 @@ export const LoginForm = () => {
           <div className="link">Esqueci minha senha</div>
         </div>
         <div className="button">
-          <Button>Entrar</Button>
+          <Button onClick={() => push('')}>Entrar</Button>
         </div>
       </div>
     </LoginFormStyled>
