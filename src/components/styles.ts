@@ -14,7 +14,7 @@ export const HeaderStyle = styled.div`
 
 export const LayoutPrincipal = styled.div`
   display: flex;
-  height: calc(100% - 72px);
+  min-height: calc(100% - 72px);
 
   .menu {
     background: #454545;
@@ -29,20 +29,21 @@ export const LayoutPrincipal = styled.div`
 `;
 
 export const MenuStyle = styled.div`
-  div {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    height: 56px;
-
-    :hover {
-      background-color: #292929;
-    }
-  }
-
   .user {
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  }
+`;
+
+export const MenuItem = styled.div`
+  width: 65px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  height: 56px;
+
+  :hover {
+    background-color: #292929;
   }
 `;
 
@@ -100,8 +101,8 @@ export const Button = styled.button`
   }
 `;
 
-export const Bold = styled.span`
-  font-weight: 500;
+export const Bold = styled.span<{weight?: 500 | 700}>`
+  font-weight: ${({weight}) => weight || 500};
 `;
 
 export const ModalStyled = styled.div`
@@ -137,5 +138,23 @@ export const CheckboxStyled = styled.div`
     height: 15px;
     width: 15px;
     margin-right: 9px;
+  }
+`;
+
+export const DescriptionStyled = styled.div<{$error?: boolean}>`
+  width: 270px;
+  padding: 12px 8px;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.25);
+  border-radius: 4px;
+  font-size: 15px;
+
+  .title-d {
+    font-size: 18px;
+    ${({$error}) => $error && 'color: #FF8181;'}
+  }
+
+  .subtitle-d {
+    margin-bottom: 20px;
   }
 `;
