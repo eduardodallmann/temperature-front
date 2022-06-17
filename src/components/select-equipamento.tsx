@@ -1,7 +1,8 @@
 import {FormControl, InputLabel, MenuItem, Select} from '@mui/material';
-import React, {useEffect, useState} from 'react';
+import {useAtom} from 'jotai';
+import React, {useEffect} from 'react';
 import {getEquipamentos} from '../services/equipamento.service';
-import {Equipamento} from '../types/equipamento';
+import {equipamentosAtom} from './atoms';
 
 export const SelectEquipamento = ({
   value,
@@ -10,7 +11,7 @@ export const SelectEquipamento = ({
   value?: number;
   onChange: (e: number) => void;
 }) => {
-  const [equipamentos, setEquipamentos] = useState<Equipamento[]>([]);
+  const [equipamentos, setEquipamentos] = useAtom(equipamentosAtom);
 
   useEffect(() => {
     getEquipamentos().then(setEquipamentos);

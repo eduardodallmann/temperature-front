@@ -23,6 +23,7 @@ export const LayoutPrincipal = styled.div`
 
   .espaco {
     width: calc(100% - 65px);
+    max-width: calc(100% - 109px);
     background-color: #f2f2f2;
     padding: 22px;
   }
@@ -74,6 +75,7 @@ export const PanelStyled = styled.div`
 
   .content {
     padding: 16px;
+    position: relative;
   }
 
   .footer {

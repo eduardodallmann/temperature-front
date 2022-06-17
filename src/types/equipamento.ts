@@ -5,7 +5,8 @@ export type Equipamento = {
 };
 
 export type FiltroEquipamentoData = {
-  equipamento?: number;
+  equipamentoId?: number;
+  equipamentoNome?: string;
   dataInicial: Date;
   dataFinal: Date;
 };

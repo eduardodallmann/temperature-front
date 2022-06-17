@@ -5,7 +5,7 @@ import {Bold} from '../../components/styles';
 import {Line} from '../../components/table/line';
 import {Panel} from '../../components/panel';
 import {Table} from '../../components/table/table';
-import {mediasAtom, tabelaAtom} from './atoms';
+import {filtrosAtom, mediasAtom, tabelaAtom} from './atoms';
 import {statusToSeverity, statusToText} from '../../services/leituras.service';
 import {Leitura} from '../../types/leitura';
 import {Empty} from '../../components/empty';
@@ -13,6 +13,7 @@ import {Empty} from '../../components/empty';
 export const RelatorioTable = () => {
   const dados = useAtomValue(tabelaAtom);
   const {count, media: mediaTemps, status} = useAtomValue(mediasAtom);
+  const {equipamentoNome} = useAtomValue(filtrosAtom);
 
   const formatLine = (linha: Leitura<Date>) => {
     return [
@@ -43,7 +44,7 @@ export const RelatorioTable = () => {
   }
 
   return (
-    <Panel title="Relatório - Equipamento Geladeira Fundos" footer={media}>
+    <Panel title={`Relatório - Equipamento ${equipamentoNome}`} footer={media}>
       <Table
         header={['Data', 'Hora', 'Temperatura', 'Status']}
         data={dados.map((d) => ({

@@ -15,7 +15,7 @@ export const RelatorioFiltro = () => {
   const buscaLeituras = useUpdateAtom(buscaLeiturasAtom);
 
   const button = (
-    <Button disabled={!filtros.equipamento} onClick={() => buscaLeituras()}>
+    <Button disabled={!filtros.equipamentoId} onClick={() => buscaLeituras()}>
       Filtrar
     </Button>
   );
@@ -25,8 +25,8 @@ export const RelatorioFiltro = () => {
       <RelatorioFiltroStyled>
         <div>
           <SelectEquipamento
-            value={filtros.equipamento}
-            onChange={(equipamento) => setFiltros({equipamento})}
+            value={filtros.equipamentoId}
+            onChange={(equipamentoId) => setFiltros({equipamentoId})}
           />
         </div>
         <div>
@@ -41,7 +41,7 @@ export const RelatorioFiltro = () => {
           <DesktopDatePicker
             label="Período final"
             value={filtros.dataFinal}
-            onChange={(e) => e && setFiltros({dataInicial: e})}
+            onChange={(e) => e && setFiltros({dataFinal: e})}
             renderInput={(params) => <TextField {...params} fullWidth />}
           />
         </div>

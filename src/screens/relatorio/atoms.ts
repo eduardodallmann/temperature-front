@@ -1,4 +1,5 @@
 import {atom} from 'jotai';
+import {equipamentosAtom} from '../../components/atoms';
 import {Leitura, StatusLeitura} from '../../types/leitura';
 import {FiltroEquipamentoData} from '../../types/equipamento';
 import {getLeituras} from '../../services/leituras.service';
@@ -11,13 +12,19 @@ export const filtros = atom<FiltroEquipamentoData>({
 export const filtrosAtom = atom(
   (get) => get(filtros),
   (get, set, newValue: Partial<FiltroEquipamentoData>) => {
-    set(filtros, {...get(filtros), ...newValue});
+    set(filtros, {
+      ...get(filtros),
+      ...newValue,
+      equipamentoNome: get(equipamentosAtom).find(
+        (e) => e.id === newValue.equipamentoId || get(filtros).equipamentoId,
+      )?.nome,
+    });
   },
 );
 
 export const tabelaAtom = atom<Leitura<Date>[]>([]);
 
-const limites = atom<{
+export const limitesAtom = atom<{
   limiteToleranciaMaxima: number;
   toleranciaMaxima: number;
   toleranciaMinima: number;
@@ -44,7 +51,7 @@ export const mediasAtom = atom<{
     limiteToleranciaMinima,
     toleranciaMaxima,
     toleranciaMinima,
-  } = get(limites);
+  } = get(limitesAtom);
   let status = StatusLeitura.DENTRO;
   if (media >= limiteToleranciaMaxima || media <= limiteToleranciaMinima) {
     status = StatusLeitura.FORA;
@@ -60,17 +67,17 @@ export const mediasAtom = atom<{
 });
 
 export const buscaLeiturasAtom = atom(null, async (get, set) => {
-  const {equipamento, dataFinal, dataInicial} = get(filtros);
-  if (equipamento) {
+  const {equipamentoId, dataFinal, dataInicial} = get(filtros);
+  if (equipamentoId) {
     const {
       leituras,
       limiteToleranciaMaxima,
       limiteToleranciaMinima,
       toleranciaMaxima,
       toleranciaMinima,
-    } = await getLeituras(equipamento, dataInicial, dataFinal);
+    } = await getLeituras(equipamentoId, dataInicial, dataFinal);
 
-    set(limites, {
+    set(limitesAtom, {
       limiteToleranciaMaxima,
       limiteToleranciaMinima,
       toleranciaMaxima,
