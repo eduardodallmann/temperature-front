@@ -10,7 +10,7 @@ export const Table = ({
   data,
 }: {
   header: Array<string>;
-  data: Array<{severity?: LineSeverity; values: Array<string>}>;
+  data: Array<{severity?: LineSeverity; values: Array<React.ReactNode>}>;
 }) => {
   return (
     <TableStyled>

@@ -1,7 +1,6 @@
+import {Checkbox, FormControlLabel, TextField} from '@mui/material';
 import React from 'react';
 import {useHistory} from 'react-router-dom';
-import {Checkbox} from '../../components/checkbox';
-import {Input} from '../../components/input';
 import {Bold, Button} from '../../components/styles';
 import {LoginFormStyled} from './styled';
 
@@ -13,15 +12,18 @@ export const LoginForm = () => {
       <div className="title">Sistema de registro de temperatura</div>
       <div className="subtitle">Faça login para entrar no sistema</div>
       <div className="field">
-        <Input placeholder="Login" />
+        <TextField fullWidth label="Login" variant="outlined" />
       </div>
       <div className="field">
-        <Input placeholder="Senha" type="password" />
+        <TextField fullWidth label="Senha" type="password" variant="outlined" />
       </div>
       <div className="entrar">
         <div className="lembrar-esqueci">
           <div className="checkbox">
-            <Checkbox label={<Bold>Lembrar meu login</Bold>} />
+            <FormControlLabel
+              control={<Checkbox />}
+              label={<Bold>Lembrar meu login</Bold>}
+            />
           </div>
           <div className="link">Esqueci minha senha</div>
         </div>

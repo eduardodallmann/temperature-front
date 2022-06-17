@@ -99,6 +99,11 @@ export const Button = styled.button`
   :active {
     background-color: #35832b;
   }
+  :disabled {
+    background-color: #b1e3aa;
+    border-color: #aad7a4;
+    cursor: not-allowed;
+  }
 `;
 
 export const Bold = styled.span<{weight?: 500 | 700}>`
@@ -116,18 +121,6 @@ export const ModalStyled = styled.div`
   padding: 0 30%;
   top: 0;
   left: 0;
-`;
-
-export const InputStyled = styled.div<{hasIcon?: boolean}>`
-  height: 34px;
-  border: 1px solid #a6a6a6;
-
-  input {
-    width: calc(100% - ${({hasIcon}) => (hasIcon ? '50px' : '26px')});
-    height: 100%;
-    border: none;
-    padding: 0 13px;
-  }
 `;
 
 export const CheckboxStyled = styled.div`
@@ -156,5 +149,25 @@ export const DescriptionStyled = styled.div<{$error?: boolean}>`
 
   .subtitle-d {
     margin-bottom: 20px;
+  }
+`;
+
+export const EmptyStyled = styled.div`
+  margin-top: 20px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #afafaf;
+
+  .title {
+    margin-top: 10px;
+    color: #858585;
+    font-weight: 700;
+    font-size: 17px;
+  }
+
+  .subtitle {
+    margin-top: 10px;
   }
 `;

@@ -1,5 +1,4 @@
 import React from 'react';
-import {stringify} from 'flatted';
 import {LineStyled} from './styles';
 import {LineSeverity} from './types';
 
@@ -13,7 +12,7 @@ export const Line = ({
   return (
     <LineStyled severity={severity}>
       {data.map((d) => (
-        <div key={stringify(d)}>{d}</div>
+        <div key={d?.toLocaleString() || ''}>{d}</div>
       ))}
     </LineStyled>
   );

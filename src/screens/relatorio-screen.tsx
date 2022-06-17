@@ -1,9 +1,7 @@
 import React from 'react';
-import {Button} from '../components/styles';
-import {Panel} from '../components/panel';
-import {Line} from '../components/table/line';
-import {Table} from '../components/table/table';
 import {Modal} from '../components/modal';
+import {RelatorioFiltro} from './relatorio/filtro';
+import {RelatorioTable} from './relatorio/table';
 
 export function RelatorioScreen() {
   return (
@@ -15,15 +13,8 @@ export function RelatorioScreen() {
           console.log('close');
         }}
       />
-      <Panel title="Filtro" footer={<Button>Filtrar</Button>}>
-        campos de filtros
-      </Panel>
-      <Panel
-        title="Relatório - Equipamento Geladeira Fundos"
-        footer={<Line data={['a', 'b', 'c']} />}
-      >
-        <Table header={['d', 'e', 'f']} data={[{values: ['1', '2', '3']}]} />
-      </Panel>
+      <RelatorioFiltro />
+      <RelatorioTable />
     </>
   );
 }
