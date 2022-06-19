@@ -10,6 +10,7 @@ import {
   Legend,
 } from 'chart.js';
 import {useUpdateAtom} from 'jotai/utils';
+import annotationPlugin from 'chartjs-plugin-annotation';
 import {RelatorioFiltro} from './relatorio/filtro';
 import {buscaLeiturasAtom} from './relatorio/atoms';
 import {GraficoPanel} from './grafico/grafico-panel';
@@ -22,6 +23,7 @@ ChartJS.register(
   Title,
   Tooltip,
   Legend,
+  annotationPlugin,
 );
 
 export function GraficoScreen() {
