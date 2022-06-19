@@ -10,6 +10,22 @@ export const HeaderStyle = styled.div`
   align-items: center;
   padding-left: 36px;
   position: relative;
+
+  @media (max-width: 600px) {
+    padding-left: 16px;
+    width: calc(100% - 16px);
+    font-size: 20px;
+  }
+
+  .menu {
+    display: none;
+    cursor: pointer;
+    margin-right: 26px;
+
+    @media (max-width: 600px) {
+      display: flex;
+    }
+  }
 `;
 
 export const LayoutPrincipal = styled.div`
@@ -19,6 +35,10 @@ export const LayoutPrincipal = styled.div`
   .menu {
     background: #454545;
     width: 65px;
+
+    @media (max-width: 600px) {
+      display: none;
+    }
   }
 
   .espaco {
@@ -26,6 +46,11 @@ export const LayoutPrincipal = styled.div`
     max-width: calc(100% - 109px);
     background-color: #f2f2f2;
     padding: 22px;
+
+    @media (max-width: 600px) {
+      max-width: 100%;
+      width: 100%;
+    }
   }
 `;
 
@@ -48,6 +73,32 @@ export const MenuItem = styled.div`
   }
 `;
 
+export const MenuFullItem = styled.div`
+  width: calc(100% - 40px);
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  cursor: pointer;
+  height: 56px;
+  padding: 10px 20px;
+  border-top: 1px solid #606060;
+
+  .icon {
+    margin-right: 20px;
+    min-width: 36px;
+  }
+
+  .title {
+    color: white;
+    font-weight: 500;
+    font-size: 17px;
+  }
+
+  :hover {
+    background-color: #292929;
+  }
+`;
+
 export const PanelStyled = styled.div`
   width: 100%;
   border: 1px solid #dddddd;
@@ -63,6 +114,12 @@ export const PanelStyled = styled.div`
     border-bottom: 1px solid #dddddd;
     display: flex;
     justify-content: space-between;
+
+    .text {
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
 
     .close {
       cursor: pointer;
@@ -82,6 +139,18 @@ export const PanelStyled = styled.div`
     margin: 0 11px 13px 11px;
     padding: 8px 11px 0 11px;
     border-top: 1px solid #dddddd;
+  }
+`;
+
+export const MenuFullStyle = styled.div`
+  z-index: 2;
+  position: absolute;
+  width: 100%;
+  height: calc(100% - 72px);
+  background-color: #454545;
+
+  @media (min-width: 600px) {
+    display: none;
   }
 `;
 

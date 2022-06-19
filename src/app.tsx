@@ -6,6 +6,7 @@ import {Menu} from './components/menu';
 import './index.scss';
 import {getRoute} from './router';
 import {LoginScreen} from './screens/login-screen';
+import {MenuFull} from './components/menu-full';
 
 function App() {
   const location = useLocation();
@@ -21,6 +22,7 @@ function App() {
     <>
       <HeaderApp />
       <LayoutPrincipal>
+        <MenuFull />
         <div className="menu">
           <Menu />
         </div>

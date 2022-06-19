@@ -18,7 +18,9 @@ export const Panel = ({
   return (
     <PanelStyled>
       <div className="title">
-        <div>{title}</div>
+        <div className="text" title={title}>
+          {title}
+        </div>
         {showClose && (
           <div className="close" onClick={onClickClose} role="button">
             <CloseIcon />

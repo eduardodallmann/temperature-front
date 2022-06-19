@@ -1,23 +1,24 @@
-import {useUpdateAtom} from 'jotai/utils';
+import {useAtom} from 'jotai';
 import React from 'react';
 import {useHistory} from 'react-router-dom';
-import ReactTooltip from 'react-tooltip';
 import {showMenuAtom} from '../screens/atoms';
 import {menuData} from './menu-data';
-import {MenuItem, MenuStyle} from './styles';
+import {MenuFullItem, MenuFullStyle} from './styles';
 
-export const Menu = () => {
+export const MenuFull = () => {
   const history = useHistory();
 
-  const setShowMenu = useUpdateAtom(showMenuAtom);
+  const [showMenu, setShowMenu] = useAtom(showMenuAtom);
+
+  if (!showMenu) {
+    return <></>;
+  }
 
   return (
-    <MenuStyle>
+    <MenuFullStyle>
       {menuData.map(({title, className, icon, path}) => (
-        <MenuItem
+        <MenuFullItem
           key={title}
-          data-tip={title}
-          data-for="tooltip"
           className={className}
           onClick={() => {
             setShowMenu(false);
@@ -25,10 +26,10 @@ export const Menu = () => {
           }}
           role="button"
         >
-          {icon}
-        </MenuItem>
+          <div className="icon">{icon}</div>
+          <div className="title">{title}</div>
+        </MenuFullItem>
       ))}
-      <ReactTooltip id="tooltip" type="dark" effect="solid" place="right" />
-    </MenuStyle>
+    </MenuFullStyle>
   );
 };
