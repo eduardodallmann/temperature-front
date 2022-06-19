@@ -4,6 +4,7 @@
   "description": "",
   "scripts": {
     "start": "cross-env WEBPACK_IS_DEV_SERVER=true NODE_ENV=development webpack serve --config webpack.config.babel.js",
+    "start:prod": "node server.js",
     "build": "cross-env NODE_ENV=production webpack --config webpack.config.babel.js",
     "test": "jest --coverage --config=configs/jest.json",
     "test-watch": "npm run test --watchAll",
