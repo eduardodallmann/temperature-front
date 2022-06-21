@@ -1,3 +1,4 @@
+import {css} from '@emotion/react';
 import styled from '@emotion/styled';
 
 export const HeaderStyle = styled.div`
@@ -48,7 +49,7 @@ export const LayoutPrincipal = styled.div`
     padding: 22px;
 
     @media (max-width: 600px) {
-      max-width: 100%;
+      max-width: calc(100% - 44px);
       width: 100%;
     }
   }
@@ -99,7 +100,21 @@ export const MenuFullItem = styled.div`
   }
 `;
 
-export const PanelStyled = styled.div`
+const overflow = css`
+  overflow-x: auto;
+  overflow-y: hidden;
+
+  ::-webkit-scrollbar {
+    height: 3px;
+    width: 3px;
+    background: white;
+  }
+  ::-webkit-scrollbar-thumb:horizontal {
+    background: #c4c4c4;
+  }
+`;
+
+export const PanelStyled = styled.div<{scrollIn?: number}>`
   width: 100%;
   border: 1px solid #dddddd;
   border-radius: 4px;
@@ -130,15 +145,27 @@ export const PanelStyled = styled.div`
     }
   }
 
-  .content {
+  .container {
     padding: 16px;
-    position: relative;
-  }
 
-  .footer {
-    margin: 0 11px 13px 11px;
-    padding: 8px 11px 0 11px;
-    border-top: 1px solid #dddddd;
+    .scroll {
+      ${({scrollIn}) => (scrollIn ? overflow : '')}
+
+      .content {
+        ${({scrollIn}) => (scrollIn ? `min-width: ${scrollIn}px;` : '')}
+        position: relative;
+        margin-bottom: 16px;
+      }
+
+      .footer {
+        ${({scrollIn}) =>
+          scrollIn ? `min-width: calc(${scrollIn}px - 16px);` : ''}
+        ${({scrollIn}) =>
+          scrollIn ? `padding: 8px;` : 'padding: 8px 8px 0 8px;'}
+        
+        border-top: 1px solid #dddddd;
+      }
+    }
   }
 `;
 
@@ -182,6 +209,7 @@ export const Bold = styled.span<{weight?: 500 | 700}>`
 `;
 
 export const ModalStyled = styled.div`
+  z-index: 5;
   height: 100%;
   width: calc(100% - 60%);
   position: absolute;
@@ -241,4 +269,15 @@ export const EmptyStyled = styled.div`
   .subtitle {
     margin-top: 10px;
   }
+`;
+
+export const BotaoTermometro = styled.div`
+  width: 26px;
+  height: 26px;
+  background-color: white;
+  border-radius: 13px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;

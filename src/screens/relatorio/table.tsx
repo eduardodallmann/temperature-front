@@ -44,7 +44,11 @@ export const RelatorioTable = () => {
   }
 
   return (
-    <Panel title={`Relatório - Equipamento ${equipamentoNome}`} footer={media}>
+    <Panel
+      title={`Relatório - Equipamento ${equipamentoNome}`}
+      footer={media}
+      scrollIn={1000}
+    >
       <Table
         header={['Data', 'Hora', 'Temperatura', 'Status']}
         data={dados.map((d) => ({

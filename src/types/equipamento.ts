@@ -1,11 +1,11 @@
 export type Equipamento = {
-  id: number;
+  id: string;
   nome: string;
   permanencia: number;
 };
 
 export type FiltroEquipamentoData = {
-  equipamentoId?: number;
+  equipamentoId?: string;
   equipamentoNome?: string;
   dataInicial: Date;
   dataFinal: Date;

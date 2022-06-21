@@ -13,6 +13,8 @@ export const Modal = ({
   cancelText = 'Cancelar',
   cancelDisabled,
   onCancel,
+
+  children,
 }: {
   visible?: boolean;
   title: string;
@@ -24,6 +26,8 @@ export const Modal = ({
   cancelText?: string;
   cancelDisabled?: boolean;
   onCancel?: () => void;
+
+  children: React.ReactNode;
 }) => {
   if (!visible) return <></>;
 
@@ -41,14 +45,13 @@ export const Modal = ({
   return (
     <ModalStyled
       data-clickable
-      onClick={(e) => {
+      onMouseDown={(e) => {
         if ((e.target as Element).hasAttributeNS(null, 'data-clickable'))
           onCancel?.();
       }}
     >
       <Panel title={title} showClose onClickClose={onCancel} footer={buttons}>
-        sfs dsf sdfs sf sfsssfs dsf sdfs sf sfsssfs dsf sdfs sf sfsssfs dsf sdfs
-        sf sfsssfs dsf sdfs sf sfsssfs dsf sdfs sf sfsssfs dsf sdfs sf sfss
+        {children}
       </Panel>
     </ModalStyled>
   );

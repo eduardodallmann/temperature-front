@@ -1,3 +1,4 @@
+import {css} from '@emotion/react';
 import styled from '@emotion/styled';
 import {LineSeverity} from './types';
 
@@ -15,17 +16,31 @@ const lineSeverityToColor = (severity?: LineSeverity) => {
   }
 };
 
-export const LineStyled = styled.div<{severity?: LineSeverity}>`
+const ellipsis = css`
+  span {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+`;
+
+export const LineStyled = styled.div<{
+  severity?: LineSeverity;
+  $ellipsis?: boolean;
+}>`
   display: flex;
   background-color: ${({severity}) => lineSeverityToColor(severity)};
   height: 30px;
   border-radius: 10px;
 
-  div {
+  > div {
     flex: 1;
     display: flex;
     justify-content: center;
     align-items: center;
+    min-width: 0;
+
+    ${({$ellipsis}) => ($ellipsis ? ellipsis : '')}
   }
 `;
 

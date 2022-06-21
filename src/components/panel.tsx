@@ -7,16 +7,18 @@ export const Panel = ({
   showClose,
   children,
   footer,
+  scrollIn,
   onClickClose,
 }: {
   title: string;
   showClose?: boolean;
   children: React.ReactNode;
   footer?: React.ReactNode;
+  scrollIn?: number;
   onClickClose?: () => void;
 }) => {
   return (
-    <PanelStyled>
+    <PanelStyled scrollIn={scrollIn}>
       <div className="title">
         <div className="text" title={title}>
           {title}
@@ -27,8 +29,12 @@ export const Panel = ({
           </div>
         )}
       </div>
-      <div className="content">{children}</div>
-      {footer && <div className="footer">{footer}</div>}
+      <div className="container">
+        <div className="scroll">
+          <div className="content">{children}</div>
+          {footer && <div className="footer">{footer}</div>}
+        </div>
+      </div>
     </PanelStyled>
   );
 };

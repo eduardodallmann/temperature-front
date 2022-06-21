@@ -8,7 +8,7 @@ const media = (arr: number[]) =>
   arr.reduce((acc, n, _, a) => acc + n / a.length, 0);
 
 export const getLeituras = async (
-  equipamentoId: number,
+  equipamentoId: string,
   dataInicial: Date,
   dataFinal: Date,
 ) => {
