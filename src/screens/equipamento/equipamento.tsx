@@ -50,6 +50,7 @@ export const Equipamento = () => {
 
   const formik = useFormik({
     initialValues: {
+      id: '',
       nome: '',
       permanencia: 200,
     },
@@ -63,11 +64,15 @@ export const Equipamento = () => {
   return (
     <>
       <Modal
-        title="Adicionar novo equipamento"
-        visible={showModal}
+        title={
+          showModal === 'new'
+            ? 'Adicionar novo equipamento'
+            : 'Editar equipamento'
+        }
+        visible={!!showModal}
         cancelText="Cancelar"
-        onCancel={() => setShowModal(false)}
-        okText="Adicionar"
+        onCancel={() => setShowModal()}
+        okText={showModal === 'new' ? 'Adicionar' : 'Editar'}
         onOk={formik.handleSubmit}
         okDisabled={!formik.isValid}
       >
@@ -100,8 +105,16 @@ export const Equipamento = () => {
       <Panel title="Equipamentos" scrollIn={650}>
         <EquipamentoStyled>
           <div className="buttons">
-            <Button onClick={() => setShowModal(true)}>Adicionar</Button>
-            <Button disabled={selectedEquipamentos.length !== 1}>Editar</Button>
+            <Button onClick={() => setShowModal('new')}>Adicionar</Button>
+            <Button
+              onClick={() => {
+                formik.setValues(selectedEquipamentos[0]);
+                setShowModal('edit');
+              }}
+              disabled={selectedEquipamentos.length !== 1}
+            >
+              Editar
+            </Button>
             <Button
               disabled={!selectedEquipamentos.length}
               onClick={() => deleteEquipamento()}

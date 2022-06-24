@@ -1,12 +1,15 @@
 import {atom} from 'jotai';
 import {
   deleteEquipamentos,
-  postEquipamento,
+  saveEquipamento,
+  updateEquipamento,
 } from '../../services/equipamento.service';
 import {equipamentosAtom, getEquipamentosAtom} from '../../components/atoms';
 import {Equipamento} from '../../types/equipamento';
 
-export const showModalEquipamentoAtom = atom(false);
+export const showModalEquipamentoAtom = atom<'new' | 'edit' | undefined>(
+  undefined,
+);
 
 const selectedEquipamentos = atom<Equipamento[]>([]);
 
@@ -69,9 +72,11 @@ export const deleteEquipamentoAtom = atom(null, async (get, set) => {
 
 export const salvarEquipamentoAtom = atom(
   null,
-  async (_, set, body: Omit<Equipamento, 'id'>) => {
-    await postEquipamento(body);
+  async (_, set, body: Equipamento) => {
+    if (body.id) await updateEquipamento(body);
+    else await saveEquipamento(body);
+
     set(getEquipamentosAtom);
-    set(showModalEquipamentoAtom, false);
+    set(showModalEquipamentoAtom);
   },
 );
