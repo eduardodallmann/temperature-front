@@ -11,6 +11,8 @@ export const showModalEquipamentoAtom = atom<'new' | 'edit' | undefined>(
   undefined,
 );
 
+export const showModalEquipamentoExclusaoAtom = atom(false);
+
 const selectedEquipamentos = atom<Equipamento[]>([]);
 
 export const selectedEquipamentosAtom = atom(
@@ -67,6 +69,7 @@ export const deleteEquipamentoAtom = atom(null, async (get, set) => {
     await deleteEquipamentos(selected);
     set(getEquipamentosAtom);
     set(selectedEquipamentos, []);
+    set(showModalEquipamentoExclusaoAtom, false);
   }
 });
 

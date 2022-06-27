@@ -1,5 +1,5 @@
-import {Checkbox, FormControlLabel, TextField} from '@mui/material';
 import React from 'react';
+import {Checkbox, FormControlLabel, TextField} from '@mui/material';
 import {useHistory} from 'react-router-dom';
 import {Bold, Button} from '../../components/styles';
 import {LoginFormStyled} from './styled';

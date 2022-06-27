@@ -5,47 +5,52 @@ import {Thermostat} from '@mui/icons-material';
 import {useUpdateAtom} from 'jotai/utils';
 import * as yup from 'yup';
 import {useFormik} from 'formik';
-import {useHistory} from 'react-router-dom';
+import {useParams} from 'react-router-dom';
+import {Leitor} from '../../types/leitura';
 import {BotaoTermometro, Button} from '../../components/styles';
 import {Panel} from '../../components/panel';
 import {EquipamentoStyled} from './styled';
 import {Table} from '../../components/table/table';
-import {equipamentosAtom, getEquipamentosAtom} from '../../components/atoms';
 import {
-  allCheckStateEquipamentosAtom,
-  allIntermediateStateEquipamentosAtom,
-  deleteEquipamentoAtom,
-  showModalEquipamentoAtom,
-  selectAllEquipamentosAtom,
-  selectedEquipamentosAtom,
-  salvarEquipamentoAtom,
-  showModalEquipamentoExclusaoAtom,
+  allCheckStateLeitoresAtom,
+  equipamentoAtom,
+  getLeitoresAtom,
+  leitoresAtom,
+  selectedLeitoresAtom,
+  showModalLeitorAtom,
 } from './atoms';
 import {Modal} from '../../components/modal';
 
-export const Equipamento = () => {
-  const history = useHistory();
+export const Leitores = () => {
+  const {id} = useParams<{id: string}>();
 
-  const [selectedEquipamentos, setSelectedEquipamentos] = useAtom(
-    selectedEquipamentosAtom,
-  );
-  const [showModal, setShowModal] = useAtom(showModalEquipamentoAtom);
-  const [showModalExclusao, setShowModalExclusao] = useAtom(
-    showModalEquipamentoExclusaoAtom,
-  );
+  const [selectedLeitores, setSelectedLeitores] = useAtom(selectedLeitoresAtom);
 
-  const equipamentos = useAtomValue(equipamentosAtom);
-  const allChecked = useAtomValue(allCheckStateEquipamentosAtom);
-  const allIntermediate = useAtomValue(allIntermediateStateEquipamentosAtom);
+  const [showModal, setShowModal] = useAtom(showModalLeitorAtom);
+  const equipamento = useAtomValue(equipamentoAtom);
+  const leitores = useAtomValue(leitoresAtom);
+  const allChecked = useAtomValue(allCheckStateLeitoresAtom);
+  // const allIntermediate = useAtomValue(allIntermediateStateLeitoresAtom);
 
-  const getEquipamentos = useUpdateAtom(getEquipamentosAtom);
-  const selectAll = useUpdateAtom(selectAllEquipamentosAtom);
-  const save = useUpdateAtom(salvarEquipamentoAtom);
-  const deleteEquipamento = useUpdateAtom(deleteEquipamentoAtom);
+  const getLeitores = useUpdateAtom(getLeitoresAtom);
+  // const selectAll = useUpdateAtom(selectAllLeitoresAtom);
+  // const save = useUpdateAtom(salvarEquipamentoAtom);
+  // const deleteEquipamento = useUpdateAtom(deleteEquipamentoAtom);
 
   useEffect(() => {
-    getEquipamentos();
+    getLeitores(id);
   }, []);
+
+  const geraFaixa = ({
+    limiteToleranciaMaxima,
+    toleranciaMaxima,
+    limiteToleranciaMinima,
+    toleranciaMinima,
+  }: Leitor) => {
+    const c = '°C';
+
+    return `${limiteToleranciaMaxima}${c} - ${toleranciaMaxima}${c} | ${toleranciaMinima}${c} - ${limiteToleranciaMinima}${c}`;
+  };
 
   const validationSchema = yup.object({
     nome: yup.string().required('Esse campo é obrigatório'),
@@ -63,23 +68,13 @@ export const Equipamento = () => {
     },
     validationSchema,
     onSubmit: (values) => {
-      save(values);
+      // save(values);
       formik.resetForm();
     },
   });
 
   return (
     <>
-      <Modal
-        title="Confirmar exclusão"
-        visible={!!showModalExclusao}
-        cancelText="Não"
-        onCancel={() => setShowModalExclusao(false)}
-        okText="Sim"
-        onOk={() => deleteEquipamento()}
-      >
-        Deseja realmente excluir os registros selecionados?
-      </Modal>
       <Modal
         title={
           showModal === 'new'
@@ -119,22 +114,22 @@ export const Equipamento = () => {
           />
         </form>
       </Modal>
-      <Panel title="Equipamentos" scrollIn={650}>
+      <Panel title="Leitores" scrollIn={650}>
         <EquipamentoStyled>
           <div className="buttons">
             <Button onClick={() => setShowModal('new')}>Adicionar</Button>
             <Button
               onClick={() => {
-                formik.setValues(selectedEquipamentos[0]);
+                formik.setValues(selectedLeitores[0]);
                 setShowModal('edit');
               }}
-              disabled={selectedEquipamentos.length !== 1}
+              disabled={selectedLeitores.length !== 1}
             >
               Editar
             </Button>
             <Button
-              disabled={!selectedEquipamentos.length}
-              onClick={() => setShowModalExclusao(true)}
+              disabled={!selectedLeitores.length}
+              // onClick={() => deleteEquipamento()}
             >
               Excluir
             </Button>
@@ -144,39 +139,28 @@ export const Equipamento = () => {
               header={[
                 <Checkbox
                   key="check"
-                  indeterminate={allIntermediate}
+                  // indeterminate={allIntermediate}
                   checked={allChecked}
-                  onChange={(_, e) => selectAll(e)}
+                  // onChange={(_, e) => selectAll(e)}
                 />,
-                'Nome',
-                'Período de permanência dos dados',
-                'Ver leitores',
+                'Descrição',
+                'Frequência de leitura',
+                'Faixa de tolerâncias máxima e mínima',
               ]}
-              data={equipamentos.map((equipamento) => ({
+              data={leitores.map((leitor) => ({
                 values: [
                   <Checkbox
-                    key={`check${equipamento.nome}`}
-                    checked={
-                      !!selectedEquipamentos.find(
-                        (s) => s.id === equipamento.id,
-                      )
-                    }
-                    onChange={(_, check) => {
-                      setSelectedEquipamentos({equipamento, check});
-                    }}
+                    key={`check${leitor.descricao}`}
+                    // checked={!!selectedLeitores.find((s) => s.id === leitor.id)}
+                    // onChange={(_, check) => {
+                    //   setSelectedLeitores({equipamento: leitor, check});
+                    // }}
                   />,
-                  equipamento.nome,
-                  `${equipamento.permanencia} dia${
-                    equipamento.permanencia === 1 ? '' : 's'
+                  leitor.descricao,
+                  `${leitor.frequenciaLeitura} minuto${
+                    leitor.frequenciaLeitura === 1 ? '' : 's'
                   }`,
-                  <BotaoTermometro
-                    key={`icon${equipamento.nome}`}
-                    onClick={() => {
-                      history.push(`/equipamento/${equipamento.id}`);
-                    }}
-                  >
-                    <Thermostat />
-                  </BotaoTermometro>,
+                  geraFaixa(leitor),
                 ],
               }))}
             />
