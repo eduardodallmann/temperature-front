@@ -2,7 +2,6 @@ import {atom} from 'jotai';
 import {
   deleteEquipamentos,
   saveEquipamento,
-  updateEquipamento,
 } from '../../services/equipamento.service';
 import {equipamentosAtom, getEquipamentosAtom} from '../../components/atoms';
 import {Equipamento} from '../../types/equipamento';
@@ -76,8 +75,11 @@ export const deleteEquipamentoAtom = atom(null, async (get, set) => {
 export const salvarEquipamentoAtom = atom(
   null,
   async (_, set, body: Equipamento) => {
-    if (body.id) await updateEquipamento(body);
-    else await saveEquipamento(body);
+    if (body.id) {
+      await saveEquipamento(body);
+    } else {
+      await saveEquipamento({nome: body.nome, permanencia: body.permanencia});
+    }
 
     set(getEquipamentosAtom);
     set(showModalEquipamentoAtom);

@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import {Checkbox, TextField} from '@mui/material';
+import {Checkbox, Grid, TextField} from '@mui/material';
 import {useAtom, useAtomValue} from 'jotai';
 import {Thermostat} from '@mui/icons-material';
 import {useUpdateAtom} from 'jotai/utils';
@@ -13,9 +13,13 @@ import {EquipamentoStyled} from './styled';
 import {Table} from '../../components/table/table';
 import {
   allCheckStateLeitoresAtom,
+  allIntermediateStateLeitoresAtom,
+  deleteLeitorAtom,
   equipamentoAtom,
   getLeitoresAtom,
   leitoresAtom,
+  salvarLeitorAtom,
+  selectAllLeitoresAtom,
   selectedLeitoresAtom,
   showModalLeitorAtom,
 } from './atoms';
@@ -30,12 +34,12 @@ export const Leitores = () => {
   const equipamento = useAtomValue(equipamentoAtom);
   const leitores = useAtomValue(leitoresAtom);
   const allChecked = useAtomValue(allCheckStateLeitoresAtom);
-  // const allIntermediate = useAtomValue(allIntermediateStateLeitoresAtom);
+  const allIntermediate = useAtomValue(allIntermediateStateLeitoresAtom);
 
   const getLeitores = useUpdateAtom(getLeitoresAtom);
-  // const selectAll = useUpdateAtom(selectAllLeitoresAtom);
-  // const save = useUpdateAtom(salvarEquipamentoAtom);
-  // const deleteEquipamento = useUpdateAtom(deleteEquipamentoAtom);
+  const selectAll = useUpdateAtom(selectAllLeitoresAtom);
+  const save = useUpdateAtom(salvarLeitorAtom);
+  const deleteEquipamento = useUpdateAtom(deleteLeitorAtom);
 
   useEffect(() => {
     getLeitores(id);
@@ -54,21 +58,30 @@ export const Leitores = () => {
 
   const validationSchema = yup.object({
     nome: yup.string().required('Esse campo é obrigatório'),
-    permanencia: yup
+    frequencia: yup
       .number()
       .min(1, 'Deve ser 1 ou maior')
       .required('Esse campo é obrigatório'),
+    limiteToleranciaMaxima: yup.number().required('Esse campo é obrigatório'),
+    toleranciaMaxima: yup.number().required('Esse campo é obrigatório'),
+    toleranciaMinima: yup.number().required('Esse campo é obrigatório'),
+    limiteToleranciaMinima: yup.number().required('Esse campo é obrigatório'),
   });
 
   const formik = useFormik({
     initialValues: {
       id: '',
       nome: '',
-      permanencia: 200,
+      frequencia: 5,
+      limiteToleranciaMaxima: 10,
+      toleranciaMaxima: 5,
+      toleranciaMinima: 0,
+      limiteToleranciaMinima: -2,
+      equipamento: id,
     },
     validationSchema,
     onSubmit: (values) => {
-      // save(values);
+      save(values);
       formik.resetForm();
     },
   });
@@ -76,11 +89,7 @@ export const Leitores = () => {
   return (
     <>
       <Modal
-        title={
-          showModal === 'new'
-            ? 'Adicionar novo equipamento'
-            : 'Editar equipamento'
-        }
+        title={showModal === 'new' ? 'Adicionar novo leitor' : 'Editar leitor'}
         visible={!!showModal}
         cancelText="Cancelar"
         onCancel={() => setShowModal()}
@@ -89,32 +98,119 @@ export const Leitores = () => {
         okDisabled={!formik.isValid}
       >
         <form style={{display: 'flex', gap: '14px'}}>
-          <TextField
-            fullWidth
-            id="nome"
-            name="nome"
-            label="Nome"
-            value={formik.values.nome}
-            onChange={formik.handleChange}
-            error={formik.touched.nome && Boolean(formik.errors.nome)}
-            helperText={formik.touched.nome && formik.errors.nome}
-          />
-          <TextField
-            fullWidth
-            id="permanencia"
-            name="permanencia"
-            label="Período de permanência dos dados (em dias)"
-            type="number"
-            value={formik.values.permanencia}
-            onChange={formik.handleChange}
-            error={
-              formik.touched.permanencia && Boolean(formik.errors.permanencia)
-            }
-            helperText={formik.touched.permanencia && formik.errors.permanencia}
-          />
+          <Grid container spacing={2}>
+            <Grid item xs={6}>
+              <TextField
+                fullWidth
+                id="nome"
+                name="nome"
+                label="Descrição"
+                value={formik.values.nome}
+                onChange={formik.handleChange}
+                error={formik.touched.nome && Boolean(formik.errors.nome)}
+                helperText={formik.touched.nome && formik.errors.nome}
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <TextField
+                fullWidth
+                id="frequencia"
+                name="frequencia"
+                label="Frequência de leitura (minutos)"
+                type="number"
+                value={formik.values.frequencia}
+                onChange={formik.handleChange}
+                error={
+                  formik.touched.frequencia && Boolean(formik.errors.frequencia)
+                }
+                helperText={
+                  formik.touched.frequencia && formik.errors.frequencia
+                }
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <TextField
+                fullWidth
+                id="limiteToleranciaMaxima"
+                name="limiteToleranciaMaxima"
+                label="Limite de tolerância máxima (°C)"
+                type="number"
+                value={formik.values.limiteToleranciaMaxima}
+                onChange={formik.handleChange}
+                error={
+                  formik.touched.limiteToleranciaMaxima &&
+                  Boolean(formik.errors.limiteToleranciaMaxima)
+                }
+                helperText={
+                  formik.touched.limiteToleranciaMaxima &&
+                  formik.errors.limiteToleranciaMaxima
+                }
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <TextField
+                fullWidth
+                id="toleranciaMaxima"
+                name="toleranciaMaxima"
+                label="Tolerância máxima (°C)"
+                type="number"
+                value={formik.values.toleranciaMaxima}
+                onChange={formik.handleChange}
+                error={
+                  formik.touched.toleranciaMaxima &&
+                  Boolean(formik.errors.toleranciaMaxima)
+                }
+                helperText={
+                  formik.touched.toleranciaMaxima &&
+                  formik.errors.toleranciaMaxima
+                }
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <TextField
+                fullWidth
+                id="toleranciaMinima"
+                name="toleranciaMinima"
+                label="Tolerância mínima (°C)"
+                type="number"
+                value={formik.values.toleranciaMinima}
+                onChange={formik.handleChange}
+                error={
+                  formik.touched.toleranciaMinima &&
+                  Boolean(formik.errors.toleranciaMinima)
+                }
+                helperText={
+                  formik.touched.toleranciaMinima &&
+                  formik.errors.toleranciaMinima
+                }
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <TextField
+                fullWidth
+                id="limiteToleranciaMinima"
+                name="limiteToleranciaMinima"
+                label="Limite de tolerância mínima (°C)"
+                type="number"
+                value={formik.values.limiteToleranciaMinima}
+                onChange={formik.handleChange}
+                error={
+                  formik.touched.limiteToleranciaMinima &&
+                  Boolean(formik.errors.limiteToleranciaMinima)
+                }
+                helperText={
+                  formik.touched.limiteToleranciaMinima &&
+                  formik.errors.limiteToleranciaMinima
+                }
+              />
+            </Grid>
+          </Grid>
         </form>
       </Modal>
-      <Panel title="Leitores" scrollIn={650}>
+      <Panel
+        title={`Leitores do equipamento ${equipamento?.nome || ''}`}
+        scrollIn={650}
+      >
         <EquipamentoStyled>
           <div className="buttons">
             <Button onClick={() => setShowModal('new')}>Adicionar</Button>
@@ -129,7 +225,7 @@ export const Leitores = () => {
             </Button>
             <Button
               disabled={!selectedLeitores.length}
-              // onClick={() => deleteEquipamento()}
+              onClick={() => deleteEquipamento(id)}
             >
               Excluir
             </Button>
@@ -139,9 +235,9 @@ export const Leitores = () => {
               header={[
                 <Checkbox
                   key="check"
-                  // indeterminate={allIntermediate}
+                  indeterminate={allIntermediate}
                   checked={allChecked}
-                  // onChange={(_, e) => selectAll(e)}
+                  onChange={(_, e) => selectAll(e)}
                 />,
                 'Descrição',
                 'Frequência de leitura',
@@ -150,15 +246,15 @@ export const Leitores = () => {
               data={leitores.map((leitor) => ({
                 values: [
                   <Checkbox
-                    key={`check${leitor.descricao}`}
-                    // checked={!!selectedLeitores.find((s) => s.id === leitor.id)}
-                    // onChange={(_, check) => {
-                    //   setSelectedLeitores({equipamento: leitor, check});
-                    // }}
+                    key={`check${leitor.nome}`}
+                    checked={!!selectedLeitores.find((s) => s.id === leitor.id)}
+                    onChange={(_, check) => {
+                      setSelectedLeitores({leitor, check});
+                    }}
                   />,
-                  leitor.descricao,
-                  `${leitor.frequenciaLeitura} minuto${
-                    leitor.frequenciaLeitura === 1 ? '' : 's'
+                  leitor.nome,
+                  `${leitor.frequencia} minuto${
+                    leitor.frequencia === 1 ? '' : 's'
                   }`,
                   geraFaixa(leitor),
                 ],

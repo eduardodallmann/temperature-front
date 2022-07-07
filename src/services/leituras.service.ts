@@ -12,7 +12,7 @@ export const getLeituras = async (
   dataInicial: Date,
   dataFinal: Date,
 ) => {
-  const {data} = await axios.get<LeitorResponse[]>(`${URL}leitors`, {
+  const {data} = await axios.get<LeitorResponse[]>(`${URL}leitores`, {
     params: {_embed: 'leituras', equipamentoId},
   });
 

@@ -1,32 +1,19 @@
 import axios from 'axios';
-import {v4 as uuidv4} from 'uuid';
 import {URL} from '../environment';
 import {Equipamento} from '../types/equipamento';
 
 export const getEquipamentos = async () => {
-  const {data} = await axios.get<Equipamento[]>(`${URL}equipamentos`);
+  const {data} = await axios.get<Equipamento[]>(`${URL}equipamento`);
 
   return data;
 };
 
 export const deleteEquipamentos = (ids: string[]) => {
-  return Promise.all(ids.map((i) => axios.delete(`${URL}equipamentos/${i}`)));
+  return axios.post(`${URL}equipamento/delete`, {ids});
 };
 
-export const saveEquipamento = async (body: Omit<Equipamento, 'id'>) => {
-  const {data} = await axios.post<Equipamento>(`${URL}equipamentos`, {
-    ...body,
-    id: uuidv4(),
-  });
-
-  return data;
-};
-
-export const updateEquipamento = async (body: Equipamento) => {
-  const {data} = await axios.put<Equipamento>(
-    `${URL}equipamentos/${body.id}`,
-    body,
-  );
+export const saveEquipamento = async (body: Partial<Equipamento>) => {
+  const {data} = await axios.post<Equipamento>(`${URL}equipamento`, body);
 
   return data;
 };

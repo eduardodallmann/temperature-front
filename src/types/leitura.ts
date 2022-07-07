@@ -14,10 +14,10 @@ export type Leitura<T extends Date | string> = {
 };
 
 export type Leitor = {
-  id: number;
-  equipamentoId: number;
-  descricao: string;
-  frequenciaLeitura: number;
+  id: string;
+  equipamento: string;
+  nome: string;
+  frequencia: number;
   limiteToleranciaMaxima: number;
   toleranciaMaxima: number;
   toleranciaMinima: number;
@@ -27,7 +27,7 @@ export type Leitor = {
 
 export type LeitorResponse = {
   id: number;
-  equipamentoId: number;
+  equipamento: number;
   descricao: string;
   frequenciaLeitura: number;
   limiteToleranciaMaxima: number;

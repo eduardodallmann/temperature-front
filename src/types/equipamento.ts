@@ -10,7 +10,7 @@ export type EquipamentoWithLeitor = {
   id: string;
   nome: string;
   permanencia: number;
-  leitors: Leitor[];
+  leitores: Leitor[];
 };
 
 export type FiltroEquipamentoData = {
