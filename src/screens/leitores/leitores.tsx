@@ -1,13 +1,12 @@
 import React, {useEffect} from 'react';
 import {Checkbox, Grid, TextField} from '@mui/material';
 import {useAtom, useAtomValue} from 'jotai';
-import {Thermostat} from '@mui/icons-material';
 import {useUpdateAtom} from 'jotai/utils';
 import * as yup from 'yup';
 import {useFormik} from 'formik';
 import {useParams} from 'react-router-dom';
 import {Leitor} from '../../types/leitura';
-import {BotaoTermometro, Button} from '../../components/styles';
+import {Button} from '../../components/styles';
 import {Panel} from '../../components/panel';
 import {EquipamentoStyled} from './styled';
 import {Table} from '../../components/table/table';
