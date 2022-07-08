@@ -18,7 +18,7 @@ export const RelatorioTable = () => {
   const formatLine = (linha: Leitura<Date>) => {
     return [
       moment(linha.data).format('DD MMM YYYY'),
-      moment(linha.hora).format('HH:mm:ss'),
+      moment(linha.data).format('HH:mm:ss'),
       `${linha.temperatura.toLocaleString()} °C`,
       statusToText(linha.status),
     ];

@@ -11,9 +11,11 @@ import {
 } from 'chart.js';
 import {useUpdateAtom} from 'jotai/utils';
 import annotationPlugin from 'chartjs-plugin-annotation';
+import {io} from 'socket.io-client';
 import {RelatorioFiltro} from './relatorio/filtro';
 import {buscaLeiturasAtom} from './relatorio/atoms';
 import {GraficoPanel} from './grafico/grafico-panel';
+import {URL} from '../environment';
 
 ChartJS.register(
   CategoryScale,
@@ -27,10 +29,20 @@ ChartJS.register(
 );
 
 export function GraficoScreen() {
+  const socket = io(URL);
+
   const buscaLeituras = useUpdateAtom(buscaLeiturasAtom);
+
+  socket.on('update', () => {
+    buscaLeituras();
+  });
 
   useEffect(() => {
     buscaLeituras();
+
+    return () => {
+      socket.disconnect();
+    };
   }, []);
 
   return (

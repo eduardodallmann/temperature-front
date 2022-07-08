@@ -124,7 +124,7 @@ export const GraficoPanel = () => {
     },
   };
 
-  const labels = dados.map((d) => moment(d.hora).format('HH:mm:ss'));
+  const labels = dados.map((d) => moment(d.data).format('HH:mm:ss'));
 
   let width: number;
   let height: number;
