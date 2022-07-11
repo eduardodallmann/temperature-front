@@ -1,8 +1,11 @@
-import {FormControl, InputLabel, MenuItem, Select} from '@mui/material';
-import {useAtomValue} from 'jotai';
-import {useUpdateAtom} from 'jotai/utils';
-import React, {useEffect} from 'react';
-import {equipamentosAtom, getEquipamentosAtom} from './atoms';
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
+import { useAtomValue } from 'jotai';
+import { useUpdateAtom } from 'jotai/utils';
+import React, { useEffect } from 'react';
+import { equipamentosAtom, getEquipamentosAtom } from './atoms';
 
 export const SelectEquipamento = ({
   value,
@@ -27,9 +30,8 @@ export const SelectEquipamento = ({
         label="Equipamento"
         onChange={(e) => {
           onChange(e.target.value);
-        }}
-      >
-        {equipamentos.map(({id, nome}) => (
+        }}>
+        {equipamentos.map(({ id, nome }) => (
           <MenuItem key={id} value={id}>
             {nome}
           </MenuItem>

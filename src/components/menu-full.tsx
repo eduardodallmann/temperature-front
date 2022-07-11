@@ -1,12 +1,12 @@
-import {useAtom} from 'jotai';
+import { useAtom } from 'jotai';
 import React from 'react';
-import {useHistory} from 'react-router-dom';
-import {showMenuAtom} from '../screens/atoms';
-import {menuData} from './menu-data';
-import {MenuFullItem, MenuFullStyle} from './styles';
+import { useNavigate } from 'react-router-dom';
+import { showMenuAtom } from '../screens/atoms';
+import { menuData } from './menu-data';
+import { MenuFullItem, MenuFullStyle } from './styles';
 
 export const MenuFull = () => {
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const [showMenu, setShowMenu] = useAtom(showMenuAtom);
 
@@ -16,16 +16,15 @@ export const MenuFull = () => {
 
   return (
     <MenuFullStyle>
-      {menuData.map(({title, className, icon, path}) => (
+      {menuData.map(({ title, className, icon, path }) => (
         <MenuFullItem
           key={title}
           className={className}
           onClick={() => {
             setShowMenu(false);
-            history.push(path);
+            navigate(path);
           }}
-          role="button"
-        >
+          role="button">
           <div className="icon">{icon}</div>
           <div className="title">{title}</div>
         </MenuFullItem>

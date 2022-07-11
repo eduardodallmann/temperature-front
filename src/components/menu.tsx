@@ -1,19 +1,19 @@
-import {useUpdateAtom} from 'jotai/utils';
+import { useUpdateAtom } from 'jotai/utils';
 import React from 'react';
-import {useHistory} from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import ReactTooltip from 'react-tooltip';
-import {showMenuAtom} from '../screens/atoms';
-import {menuData} from './menu-data';
-import {MenuItem, MenuStyle} from './styles';
+import { showMenuAtom } from '../screens/atoms';
+import { menuData } from './menu-data';
+import { MenuItem, MenuStyle } from './styles';
 
 export const Menu = () => {
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const setShowMenu = useUpdateAtom(showMenuAtom);
 
   return (
     <MenuStyle>
-      {menuData.map(({title, className, icon, path}) => (
+      {menuData.map(({ title, className, icon, path }) => (
         <MenuItem
           key={title}
           data-tip={title}
@@ -21,10 +21,9 @@ export const Menu = () => {
           className={className}
           onClick={() => {
             setShowMenu(false);
-            history.push(path);
+            navigate(path);
           }}
-          role="button"
-        >
+          role="button">
           {icon}
         </MenuItem>
       ))}

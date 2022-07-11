@@ -1,4 +1,4 @@
-import {StatusLeitura} from './leitura';
+import { StatusLeitura } from './leitura';
 
 export type Dash = {
   nome: string;

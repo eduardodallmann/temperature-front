@@ -1,16 +1,16 @@
 import React from 'react';
-import {ChartData, ChartOptions} from 'chart.js';
-import {Line} from 'react-chartjs-2';
-import {useAtomValue} from 'jotai';
+import { ChartData, ChartOptions } from 'chart.js';
+import { Line } from 'react-chartjs-2';
+import { useAtomValue } from 'jotai';
 import moment from 'moment';
 import {
   AnnotationPluginOptions,
   PartialEventContext,
 } from 'chartjs-plugin-annotation';
-import {Panel} from '../../components/panel';
-import {filtrosAtom, limitesAtom, tabelaAtom} from '../relatorio/atoms';
-import {Empty} from '../../components/empty';
-import {_DeepPartialObject} from './types';
+import { Panel } from '../../components/panel';
+import { filtrosAtom, limitesAtom, tabelaAtom } from '../relatorio/atoms';
+import { Empty } from '../../components/empty';
+import { _DeepPartialObject } from './types';
 
 export const GraficoPanel = () => {
   const vermelho = '#EE4057';
@@ -23,7 +23,7 @@ export const GraficoPanel = () => {
     limiteToleranciaMinima,
     toleranciaMinima,
   } = useAtomValue(limitesAtom);
-  const {equipamentoNome} = useAtomValue(filtrosAtom);
+  const { equipamentoNome } = useAtomValue(filtrosAtom);
 
   if (!dados.length) {
     return <Empty subtitle="Use os filtros acima para ver resultados" />;
@@ -74,7 +74,7 @@ export const GraficoPanel = () => {
     enabled: true,
     backgroundColor: 'rgba(102, 102, 102, 0.5)',
     position: 'start',
-    font: {size: 10},
+    font: { size: 10 },
     padding: 3,
   };
 
@@ -154,20 +154,21 @@ export const GraficoPanel = () => {
         caretPadding: () => 10,
         callbacks: {
           title: () => '',
-          label: ({label, formattedValue}) => `${label} - ${formattedValue} °C`,
+          label: ({ label, formattedValue }) =>
+            `${label} - ${formattedValue} °C`,
         },
       },
-      legend: {display: false},
-      title: {display: false},
+      legend: { display: false },
+      title: { display: false },
       annotation: {
         clip: false,
         annotations: {
           ...(anotations.reduce(
-            (a, v, i) => ({...a, [`annotation${i}`]: v}),
+            (a, v, i) => ({ ...a, [`annotation${i}`]: v }),
             {},
           ) as _DeepPartialObject<AnnotationPluginOptions>['annotations']),
           ...(anotationsSub.reduce(
-            (a, v, i) => ({...a, [`annotationSub${i}`]: v}),
+            (a, v, i) => ({ ...a, [`annotationSub${i}`]: v }),
             {},
           ) as _DeepPartialObject<AnnotationPluginOptions>['annotations']),
           ...anotationsTolMax,
@@ -192,7 +193,7 @@ export const GraficoPanel = () => {
   };
 
   return (
-    <Panel title={`Relatório - Equipamento ${equipamentoNome}`} footer={}>
+    <Panel title={`Relatório - Equipamento ${equipamentoNome}`}>
       <Line options={options} data={data} height={300} />
     </Panel>
   );

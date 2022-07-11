@@ -1,15 +1,17 @@
-import React, {useEffect} from 'react';
-import {Checkbox, Grid, TextField} from '@mui/material';
-import {useAtom, useAtomValue} from 'jotai';
-import {useUpdateAtom} from 'jotai/utils';
+import React, { useEffect } from 'react';
+import Checkbox from '@mui/material/Checkbox';
+import Grid from '@mui/material/Grid';
+import TextField from '@mui/material/TextField';
+import { useAtom, useAtomValue } from 'jotai';
+import { useUpdateAtom } from 'jotai/utils';
 import * as yup from 'yup';
-import {useFormik} from 'formik';
-import {useParams} from 'react-router-dom';
-import {Leitor} from '../../types/leitura';
-import {Button} from '../../components/styles';
-import {Panel} from '../../components/panel';
-import {EquipamentoStyled} from './styled';
-import {Table} from '../../components/table/table';
+import { useFormik } from 'formik';
+import { useParams } from 'react-router-dom';
+import { Leitor } from '../../types/leitura';
+import { Button } from '../../components/styles';
+import { Panel } from '../../components/panel';
+import { EquipamentoStyled } from './styled';
+import { Table } from '../../components/table/table';
 import {
   allCheckStateLeitoresAtom,
   allIntermediateStateLeitoresAtom,
@@ -22,10 +24,10 @@ import {
   selectedLeitoresAtom,
   showModalLeitorAtom,
 } from './atoms';
-import {Modal} from '../../components/modal';
+import { Modal } from '../../components/modal';
 
 export const Leitores = () => {
-  const {id} = useParams<{id: string}>();
+  const { id } = useParams<{ id: string }>();
 
   const [selectedLeitores, setSelectedLeitores] = useAtom(selectedLeitoresAtom);
 
@@ -41,7 +43,9 @@ export const Leitores = () => {
   const deleteEquipamento = useUpdateAtom(deleteLeitorAtom);
 
   useEffect(() => {
-    getLeitores(id);
+    if (id) {
+      getLeitores(id);
+    }
   }, []);
 
   const geraFaixa = ({
@@ -76,7 +80,7 @@ export const Leitores = () => {
       toleranciaMaxima: 5,
       toleranciaMinima: 0,
       limiteToleranciaMinima: -2,
-      equipamento: id,
+      equipamento: id || '',
     },
     validationSchema,
     onSubmit: (values) => {
@@ -94,9 +98,8 @@ export const Leitores = () => {
         onCancel={() => setShowModal()}
         okText={showModal === 'new' ? 'Adicionar' : 'Editar'}
         onOk={formik.handleSubmit}
-        okDisabled={!formik.isValid}
-      >
-        <form style={{display: 'flex', gap: '14px'}}>
+        okDisabled={!formik.isValid}>
+        <form style={{ display: 'flex', gap: '14px' }}>
           <Grid container spacing={2}>
             <Grid item xs={6}>
               <TextField
@@ -208,8 +211,7 @@ export const Leitores = () => {
       </Modal>
       <Panel
         title={`Leitores do equipamento ${equipamento?.nome || ''}`}
-        scrollIn={650}
-      >
+        scrollIn={650}>
         <EquipamentoStyled>
           <div className="buttons">
             <Button onClick={() => setShowModal('new')}>Adicionar</Button>
@@ -218,14 +220,16 @@ export const Leitores = () => {
                 formik.setValues(selectedLeitores[0]);
                 setShowModal('edit');
               }}
-              disabled={selectedLeitores.length !== 1}
-            >
+              disabled={selectedLeitores.length !== 1}>
               Editar
             </Button>
             <Button
               disabled={!selectedLeitores.length}
-              onClick={() => deleteEquipamento(id)}
-            >
+              onClick={() => {
+                if (id) {
+                  deleteEquipamento(id);
+                }
+              }}>
               Excluir
             </Button>
           </div>
@@ -248,7 +252,7 @@ export const Leitores = () => {
                     key={`check${leitor.nome}`}
                     checked={!!selectedLeitores.find((s) => s.id === leitor.id)}
                     onChange={(_, check) => {
-                      setSelectedLeitores({leitor, check});
+                      setSelectedLeitores({ leitor, check });
                     }}
                   />,
                   leitor.nome,

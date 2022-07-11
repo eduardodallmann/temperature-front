@@ -1,16 +1,17 @@
-import React, {useEffect} from 'react';
-import {Checkbox, TextField} from '@mui/material';
-import {useAtom, useAtomValue} from 'jotai';
-import {Thermostat} from '@mui/icons-material';
-import {useUpdateAtom} from 'jotai/utils';
+import React, { useEffect } from 'react';
+import Checkbox from '@mui/material/Checkbox';
+import TextField from '@mui/material/TextField';
+import { useAtom, useAtomValue } from 'jotai';
+import { Thermostat } from '@mui/icons-material';
+import { useUpdateAtom } from 'jotai/utils';
 import * as yup from 'yup';
-import {useFormik} from 'formik';
-import {useHistory} from 'react-router-dom';
-import {BotaoTermometro, Button} from '../../components/styles';
-import {Panel} from '../../components/panel';
-import {EquipamentoStyled} from './styled';
-import {Table} from '../../components/table/table';
-import {equipamentosAtom, getEquipamentosAtom} from '../../components/atoms';
+import { useFormik } from 'formik';
+import { useNavigate } from 'react-router-dom';
+import { BotaoTermometro, Button } from '../../components/styles';
+import { Panel } from '../../components/panel';
+import { EquipamentoStyled } from './styled';
+import { Table } from '../../components/table/table';
+import { equipamentosAtom, getEquipamentosAtom } from '../../components/atoms';
 import {
   allCheckStateEquipamentosAtom,
   allIntermediateStateEquipamentosAtom,
@@ -21,10 +22,10 @@ import {
   salvarEquipamentoAtom,
   showModalEquipamentoExclusaoAtom,
 } from './atoms';
-import {Modal} from '../../components/modal';
+import { Modal } from '../../components/modal';
 
 export const Equipamento = () => {
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const [selectedEquipamentos, setSelectedEquipamentos] = useAtom(
     selectedEquipamentosAtom,
@@ -76,8 +77,7 @@ export const Equipamento = () => {
         cancelText="Não"
         onCancel={() => setShowModalExclusao(false)}
         okText="Sim"
-        onOk={() => deleteEquipamento()}
-      >
+        onOk={() => deleteEquipamento()}>
         Deseja realmente excluir os registros selecionados?
       </Modal>
       <Modal
@@ -91,9 +91,8 @@ export const Equipamento = () => {
         onCancel={() => setShowModal()}
         okText={showModal === 'new' ? 'Adicionar' : 'Editar'}
         onOk={formik.handleSubmit}
-        okDisabled={!formik.isValid}
-      >
-        <form style={{display: 'flex', gap: '14px'}}>
+        okDisabled={!formik.isValid}>
+        <form style={{ display: 'flex', gap: '14px' }}>
           <TextField
             fullWidth
             id="nome"
@@ -128,14 +127,12 @@ export const Equipamento = () => {
                 formik.setValues(selectedEquipamentos[0]);
                 setShowModal('edit');
               }}
-              disabled={selectedEquipamentos.length !== 1}
-            >
+              disabled={selectedEquipamentos.length !== 1}>
               Editar
             </Button>
             <Button
               disabled={!selectedEquipamentos.length}
-              onClick={() => setShowModalExclusao(true)}
-            >
+              onClick={() => setShowModalExclusao(true)}>
               Excluir
             </Button>
           </div>
@@ -162,7 +159,7 @@ export const Equipamento = () => {
                       )
                     }
                     onChange={(_, check) => {
-                      setSelectedEquipamentos({equipamento, check});
+                      setSelectedEquipamentos({ equipamento, check });
                     }}
                   />,
                   equipamento.nome,
@@ -172,9 +169,8 @@ export const Equipamento = () => {
                   <BotaoTermometro
                     key={`icon${equipamento.nome}`}
                     onClick={() => {
-                      history.push(`/equipamento/${equipamento.id}`);
-                    }}
-                  >
+                      navigate(`/equipamento/${equipamento.id}`);
+                    }}>
                     <Thermostat />
                   </BotaoTermometro>,
                 ],

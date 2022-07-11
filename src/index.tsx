@@ -1,13 +1,13 @@
-import {LocalizationProvider} from '@mui/x-date-pickers';
-import {Provider} from 'jotai';
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { Provider } from 'jotai';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {BrowserRouter} from 'react-router-dom';
-import {AdapterMoment} from '@mui/x-date-pickers/AdapterMoment';
+import { BrowserRouter } from 'react-router-dom';
+import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import 'moment/locale/pt-br';
-import {createTheme, ThemeProvider} from '@mui/material';
+import { createTheme, ThemeProvider } from '@mui/material';
 import {} from '@mui/material/colors';
-import {App} from './app';
+import { App } from './app';
 
 const defaultTheme = createTheme();
 

@@ -1,12 +1,12 @@
 import React from 'react';
-import {useLocation} from 'react-router-dom';
-import {LayoutPrincipal} from './components/styles';
-import {HeaderApp} from './components/header-app';
-import {Menu} from './components/menu';
-import './index.scss';
-import {AppRouter} from './router';
-import {LoginScreen} from './screens/login-screen';
-import {MenuFull} from './components/menu-full';
+import { useLocation } from 'react-router-dom';
+import { LayoutPrincipal } from './components/styles';
+import { HeaderApp } from './components/header-app';
+import { Menu } from './components/menu';
+import './index.css';
+import { AppRouter } from './router';
+import { LoginScreen } from './screens/login-screen';
+import { MenuFull } from './components/menu-full';
 
 function App() {
   const location = useLocation();
@@ -29,4 +29,4 @@ function App() {
   );
 }
 
-export {App};
+export { App };
