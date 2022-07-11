@@ -1,5 +1,5 @@
 import React from 'react';
-import {ChartArea, ChartData, ChartOptions, ScriptableContext} from 'chart.js';
+import {ChartData, ChartOptions} from 'chart.js';
 import {Line} from 'react-chartjs-2';
 import {useAtomValue} from 'jotai';
 import moment from 'moment';
@@ -7,7 +7,6 @@ import {
   AnnotationPluginOptions,
   PartialEventContext,
 } from 'chartjs-plugin-annotation';
-import {LineSeverity} from '../../components/table/types';
 import {Panel} from '../../components/panel';
 import {filtrosAtom, limitesAtom, tabelaAtom} from '../relatorio/atoms';
 import {Empty} from '../../components/empty';
@@ -18,7 +17,12 @@ export const GraficoPanel = () => {
   const medioVerm = '#9A6B7F';
   const azul = '#359FAF';
   const dados = useAtomValue(tabelaAtom);
-  const {limiteToleranciaMaxima, toleranciaMaxima} = useAtomValue(limitesAtom);
+  const {
+    limiteToleranciaMaxima,
+    toleranciaMaxima,
+    limiteToleranciaMinima,
+    toleranciaMinima,
+  } = useAtomValue(limitesAtom);
   const {equipamentoNome} = useAtomValue(filtrosAtom);
 
   if (!dados.length) {
@@ -37,22 +41,11 @@ export const GraficoPanel = () => {
     return ctx.chart.scales.y.min;
   };
 
-  const defineDotColor = (value: number) => {
-    if (value >= limiteToleranciaMaxima) {
-      return vermelho;
-    }
-    if (value >= toleranciaMaxima) {
-      return medioVerm;
-    }
-
-    return azul;
-  };
-
   const anotations: _DeepPartialObject<AnnotationPluginOptions>['annotations'] =
-    dados.map((d, i) => ({
+    dados.map((_, i) => ({
       type: 'point',
-      backgroundColor: () => defineDotColor(d.temperatura),
-      borderColor: () => defineDotColor(d.temperatura),
+      backgroundColor: () => azul,
+      borderColor: () => azul,
       radius: 3,
       xValue: (ctx: PartialEventContext) => defineDotPosition(ctx, i, 'x'),
       yValue: (ctx: PartialEventContext) => defineDotPosition(ctx, i, 'y'),
@@ -70,6 +63,64 @@ export const GraficoPanel = () => {
           defineDotPosition(ctx, i, 'x') + 0.5,
         yValue: (ctx: PartialEventContext) => defineDotPosition(ctx, i, 'y'),
       }));
+
+  const anotationCommum = {
+    display: true,
+    type: 'line' as const,
+    borderWidth: 1,
+    borderDash: [10],
+  };
+  const labelCommum = {
+    enabled: true,
+    backgroundColor: 'rgba(102, 102, 102, 0.5)',
+    position: 'start',
+    font: {size: 10},
+    padding: 3,
+  };
+
+  const anotationsTolMax: _DeepPartialObject<AnnotationPluginOptions>['annotations'] =
+    [
+      {
+        ...anotationCommum,
+        yMin: toleranciaMaxima,
+        yMax: toleranciaMaxima,
+        borderColor: medioVerm,
+        label: {
+          ...labelCommum,
+          content: 'Tolerância',
+        },
+      },
+      {
+        ...anotationCommum,
+        yMin: toleranciaMinima,
+        yMax: toleranciaMinima,
+        borderColor: medioVerm,
+        label: {
+          ...labelCommum,
+          content: 'Tolerância',
+        },
+      },
+      {
+        ...anotationCommum,
+        yMin: limiteToleranciaMaxima,
+        yMax: limiteToleranciaMaxima,
+        borderColor: vermelho,
+        label: {
+          ...labelCommum,
+          content: 'Limite tolerância',
+        },
+      },
+      {
+        ...anotationCommum,
+        yMin: limiteToleranciaMinima,
+        yMax: limiteToleranciaMinima,
+        borderColor: vermelho,
+        label: {
+          ...labelCommum,
+          content: 'Limite tolerância',
+        },
+      },
+    ];
 
   const options: ChartOptions<'line'> = {
     maintainAspectRatio: false,
@@ -119,6 +170,7 @@ export const GraficoPanel = () => {
             (a, v, i) => ({...a, [`annotationSub${i}`]: v}),
             {},
           ) as _DeepPartialObject<AnnotationPluginOptions>['annotations']),
+          ...anotationsTolMax,
         },
       },
     },
@@ -126,72 +178,21 @@ export const GraficoPanel = () => {
 
   const labels = dados.map((d) => moment(d.data).format('HH:mm:ss'));
 
-  let width: number;
-  let height: number;
-  let gradient: CanvasGradient;
-
-  const getGradient = (
-    severity: LineSeverity,
-    ctx: CanvasRenderingContext2D,
-    chartArea: ChartArea,
-  ) => {
-    const chartWidth = chartArea.right - chartArea.left;
-    const chartHeight = chartArea.bottom - chartArea.top;
-
-    if (gradient === null || width !== chartWidth || height !== chartHeight) {
-      width = chartWidth;
-      height = chartHeight;
-      gradient = ctx.createLinearGradient(
-        0,
-        chartArea.bottom,
-        0,
-        chartArea.top,
-      );
-
-      if (severity === LineSeverity.ERROR) {
-        gradient.addColorStop(0.8, vermelho);
-        gradient.addColorStop(0.6, medioVerm);
-        gradient.addColorStop(0.5, azul);
-      } else if (severity === LineSeverity.NORMAL) {
-        gradient.addColorStop(0, azul);
-      } else {
-        gradient.addColorStop(0.9, medioVerm);
-        gradient.addColorStop(0.5, azul);
-      }
-    }
-
-    return gradient;
-  };
-
-  const preColor = ({chart: {ctx, chartArea}}: ScriptableContext<'line'>) => {
-    if (!chartArea) {
-      return undefined;
-    }
-
-    let severity = LineSeverity.NORMAL;
-    if (dados.find((d) => d.temperatura >= limiteToleranciaMaxima)) {
-      severity = LineSeverity.ERROR;
-    } else if (dados.find((d) => d.temperatura >= toleranciaMaxima)) {
-      severity = LineSeverity.WARN;
-    }
-    return getGradient(severity, ctx, chartArea);
-  };
-
   const data: ChartData<'line'> = {
     labels,
     datasets: [
       {
         data: dados.map((d) => d.temperatura),
-        borderColor: preColor,
+        borderColor: azul,
         pointRadius: 5,
-        pointBackgroundColor: preColor,
+        pointBackgroundColor: azul,
         tension: 0.3,
       },
     ],
   };
 
   return (
-    <Panel title={`Relatório - Equipamento ${equipamentoNome}`}>
+    <Panel title={`Relatório - Equipamento ${equipamentoNome}`} footer={}>
       <Line options={options} data={data} height={300} />
     </Panel>
   );
