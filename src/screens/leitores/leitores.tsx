@@ -229,10 +229,10 @@ export const Leitores = () => {
       </Modal>
       <Panel
         title={`Leitores do equipamento ${equipamento?.nome || ''}`}
-        scrollIn={650}>
+        scrollIn={980}>
         <EquipamentoStyled>
           <div className="buttons">
-            <Button onClick={() => setShowModal('new')}>Adicionar</Button>
+            <Button onClick={() => setShowModal('new')}>Solicitar novo</Button>
             <Button
               onClick={() => {
                 formik.setValues(selectedLeitores[0]);
@@ -244,7 +244,7 @@ export const Leitores = () => {
             <Button
               disabled={!selectedLeitores.length}
               onClick={() => setShowModalExclusao(true)}>
-              Excluir
+              Solicitar remoção
             </Button>
           </div>
           <div>
