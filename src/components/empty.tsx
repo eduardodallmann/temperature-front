@@ -1,5 +1,5 @@
 import React from 'react';
-import Inbox from '@mui/icons-material/Input';
+import Inbox from '@mui/icons-material/Inbox';
 import { EmptyStyled } from './styles';
 
 export const Empty = ({

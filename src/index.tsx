@@ -1,7 +1,7 @@
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { Provider } from 'jotai';
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import 'moment/locale/pt-br';
@@ -17,15 +17,18 @@ const theme = createTheme({
   },
 });
 
-ReactDOM.render(
-  <LocalizationProvider dateAdapter={AdapterMoment}>
-    <Provider>
-      <ThemeProvider theme={theme}>
-        <BrowserRouter>
-          <App />
-        </BrowserRouter>
-      </ThemeProvider>
-    </Provider>
-  </LocalizationProvider>,
-  document.getElementById('root'),
-);
+const container = document.getElementById('root');
+if (container) {
+  const root = createRoot(container);
+  root.render(
+    <LocalizationProvider dateAdapter={AdapterMoment}>
+      <Provider>
+        <ThemeProvider theme={theme}>
+          <BrowserRouter>
+            <App />
+          </BrowserRouter>
+        </ThemeProvider>
+      </Provider>
+    </LocalizationProvider>,
+  );
+}

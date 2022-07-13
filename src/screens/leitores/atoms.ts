@@ -1,11 +1,13 @@
-import {atom} from 'jotai';
-import {Equipamento} from '../../types/equipamento';
+import { atom } from 'jotai';
+import { Equipamento } from '../../types/equipamento';
 import {
   deleteLeitores,
   getLeitores,
   saveLeitor,
 } from '../../services/leitor.service';
-import {Leitor} from '../../types/leitura';
+import { Leitor } from '../../types/leitura';
+import { snackbarError } from '../snackbars';
+import { showModalEquipamentoExclusaoAtom } from '../equipamento/atoms';
 
 export const equipamentoAtom = atom<Equipamento | undefined>(undefined);
 
@@ -14,7 +16,7 @@ export const leitoresAtom = atom<Leitor[]>([]);
 export const getLeitoresAtom = atom(null, async (_, set, id: string) => {
   const response = await getLeitores(id);
   set(leitoresAtom, response.leitores);
-  set(equipamentoAtom, {...response});
+  set(equipamentoAtom, { ...response });
 });
 
 export const showModalLeitorAtom = atom<'new' | 'edit' | undefined>(undefined);
@@ -23,7 +25,7 @@ const selectedLeitores = atom<Leitor[]>([]);
 
 export const selectedLeitoresAtom = atom(
   (get) => get(selectedLeitores),
-  (_, set, {leitor, check}: {leitor: Leitor; check: boolean}) => {
+  (_, set, { leitor, check }: { leitor: Leitor; check: boolean }) => {
     set(selectedLeitores, (current) => {
       if (check) {
         return [...current, leitor];
@@ -67,9 +69,15 @@ export const deleteLeitorAtom = atom(
   async (get, set, leitorId: string) => {
     const selected = get(selectedLeitores).map((s) => s.id);
     if (selected.length) {
-      await deleteLeitores(selected);
-      set(getLeitoresAtom, leitorId);
-      set(selectedLeitores, []);
+      try {
+        await deleteLeitores(selected);
+        set(getLeitoresAtom, leitorId);
+        set(selectedLeitores, []);
+      } catch (error) {
+        set(snackbarError, 'Não é possível remover');
+      } finally {
+        set(showModalEquipamentoExclusaoAtom, false);
+      }
     }
   },
 );
@@ -77,12 +85,16 @@ export const deleteLeitorAtom = atom(
 export const salvarLeitorAtom = atom(
   null,
   async (_, set, body: Omit<Leitor, 'leituras'>) => {
-    if (body.id) {
-      await saveLeitor(body);
-    } else {
-      await saveLeitor({...body, id: undefined});
+    try {
+      if (body.id) {
+        await saveLeitor(body);
+      } else {
+        await saveLeitor({ ...body, id: undefined });
+      }
+      set(getLeitoresAtom, body.equipamento);
+      set(showModalLeitorAtom);
+    } catch (error) {
+      set(snackbarError, 'Não é possível salvar');
     }
-    set(getLeitoresAtom, body.equipamento);
-    set(showModalLeitorAtom);
   },
 );

@@ -7,6 +7,7 @@ import './index.css';
 import { AppRouter } from './router';
 import { LoginScreen } from './screens/login-screen';
 import { MenuFull } from './components/menu-full';
+import { SnackbarsGlobal } from './components/snackbars-global';
 
 function App() {
   const location = useLocation();
@@ -15,6 +16,7 @@ function App() {
 
   return (
     <>
+      <SnackbarsGlobal />
       <HeaderApp />
       <LayoutPrincipal>
         <MenuFull />

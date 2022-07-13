@@ -46,6 +46,7 @@ export const Equipamento = () => {
 
   useEffect(() => {
     getEquipamentos();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const validationSchema = yup.object({
@@ -63,8 +64,8 @@ export const Equipamento = () => {
       permanencia: 200,
     },
     validationSchema,
-    onSubmit: (values) => {
-      save(values);
+    onSubmit: async (values) => {
+      await save(values);
       formik.resetForm();
     },
   });

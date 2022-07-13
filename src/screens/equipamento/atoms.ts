@@ -1,10 +1,11 @@
-import {atom} from 'jotai';
+import { atom } from 'jotai';
 import {
   deleteEquipamentos,
   saveEquipamento,
 } from '../../services/equipamento.service';
-import {equipamentosAtom, getEquipamentosAtom} from '../../components/atoms';
-import {Equipamento} from '../../types/equipamento';
+import { equipamentosAtom, getEquipamentosAtom } from '../../components/atoms';
+import { Equipamento } from '../../types/equipamento';
+import { snackbarError } from '../snackbars';
 
 export const showModalEquipamentoAtom = atom<'new' | 'edit' | undefined>(
   undefined,
@@ -19,7 +20,7 @@ export const selectedEquipamentosAtom = atom(
   (
     _,
     set,
-    {equipamento, check}: {equipamento: Equipamento; check: boolean},
+    { equipamento, check }: { equipamento: Equipamento; check: boolean },
   ) => {
     set(selectedEquipamentos, (current) => {
       if (check) {
@@ -65,23 +66,34 @@ export const selectAllEquipamentosAtom = atom(
 export const deleteEquipamentoAtom = atom(null, async (get, set) => {
   const selected = get(selectedEquipamentos).map((s) => s.id);
   if (selected.length) {
-    await deleteEquipamentos(selected);
-    set(getEquipamentosAtom);
-    set(selectedEquipamentos, []);
-    set(showModalEquipamentoExclusaoAtom, false);
+    try {
+      await deleteEquipamentos(selected);
+      set(getEquipamentosAtom);
+      set(selectedEquipamentos, []);
+    } catch (error) {
+      set(snackbarError, 'Não é possível remover');
+    } finally {
+      set(showModalEquipamentoExclusaoAtom, false);
+    }
   }
 });
 
 export const salvarEquipamentoAtom = atom(
   null,
   async (_, set, body: Equipamento) => {
-    if (body.id) {
-      await saveEquipamento(body);
-    } else {
-      await saveEquipamento({nome: body.nome, permanencia: body.permanencia});
+    try {
+      if (body.id) {
+        await saveEquipamento(body);
+      } else {
+        await saveEquipamento({
+          nome: body.nome,
+          permanencia: body.permanencia,
+        });
+      }
+      set(showModalEquipamentoAtom);
+      set(getEquipamentosAtom);
+    } catch (error) {
+      set(snackbarError, 'Não é possível salvar');
     }
-
-    set(getEquipamentosAtom);
-    set(showModalEquipamentoAtom);
   },
 );

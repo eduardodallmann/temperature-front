@@ -25,11 +25,15 @@ import {
   showModalLeitorAtom,
 } from './atoms';
 import { Modal } from '../../components/modal';
+import { showModalEquipamentoExclusaoAtom } from '../equipamento/atoms';
 
 export const Leitores = () => {
   const { id } = useParams<{ id: string }>();
 
   const [selectedLeitores, setSelectedLeitores] = useAtom(selectedLeitoresAtom);
+  const [showModalExclusao, setShowModalExclusao] = useAtom(
+    showModalEquipamentoExclusaoAtom,
+  );
 
   const [showModal, setShowModal] = useAtom(showModalLeitorAtom);
   const equipamento = useAtomValue(equipamentoAtom);
@@ -40,12 +44,13 @@ export const Leitores = () => {
   const getLeitores = useUpdateAtom(getLeitoresAtom);
   const selectAll = useUpdateAtom(selectAllLeitoresAtom);
   const save = useUpdateAtom(salvarLeitorAtom);
-  const deleteEquipamento = useUpdateAtom(deleteLeitorAtom);
+  const deleteLeitor = useUpdateAtom(deleteLeitorAtom);
 
   useEffect(() => {
     if (id) {
       getLeitores(id);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const geraFaixa = ({
@@ -91,6 +96,19 @@ export const Leitores = () => {
 
   return (
     <>
+      <Modal
+        title="Confirmar exclusão"
+        visible={!!showModalExclusao}
+        cancelText="Não"
+        onCancel={() => setShowModalExclusao(false)}
+        okText="Sim"
+        onOk={() => {
+          if (id) {
+            deleteLeitor(id);
+          }
+        }}>
+        Deseja realmente excluir os registros selecionados?
+      </Modal>
       <Modal
         title={showModal === 'new' ? 'Adicionar novo leitor' : 'Editar leitor'}
         visible={!!showModal}
@@ -225,11 +243,7 @@ export const Leitores = () => {
             </Button>
             <Button
               disabled={!selectedLeitores.length}
-              onClick={() => {
-                if (id) {
-                  deleteEquipamento(id);
-                }
-              }}>
+              onClick={() => setShowModalExclusao(true)}>
               Excluir
             </Button>
           </div>
